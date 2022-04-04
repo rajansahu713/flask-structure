@@ -147,6 +147,21 @@ def editbookmark(id):
     ),HTTP_200_OK
 
 
-    
+@bookmarks.get('/stats')
+@jwt_required()
+def get_stats():
+    current_id = get_jwt_identity()
+    bookmarks = Bookmark.query.filter_by(user_id=current_id).all()
+    data = []
+    for bookmark in bookmarks:
+        data.append(
+            {
+                "id":bookmark.id,
+                "url":bookmark.url,
+                "short_url":bookmark.short_url,
+                "visits":bookmark.visits,
+            }
+        )
+    return jsonify({"data":data}),HTTP_200_OK
 
     
